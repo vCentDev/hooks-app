@@ -1,10 +1,27 @@
+import { UserContext } from "@/09-useContext/context/UserContext"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Link } from "react-router"
+import { useContext, useState } from "react"
+import { Link, useNavigate } from "react-router"
+import { toast } from "sonner"
 
 export const LoginPage = () => {
-    function handleSubmit(): void {
-        throw new Error("Function not implemented.")
+    const { login } = useContext(UserContext);
+    const [userId, setUserId] = useState('')
+
+    const navigation = useNavigate();
+
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+        event.preventDefault();
+
+        const result = login(Number(userId));
+
+        if (!result) {
+            toast.warning('Usuarior no encontrado')
+            return
+        }
+
+        navigation('/profile');
     }
 
     return (
@@ -16,6 +33,8 @@ export const LoginPage = () => {
                 <Input
                     type="number"
                     placeholder="ID del usuario"
+                    value={userId}
+                    onChange={(event) => setUserId(event.target.value)}
                 />
 
                 <Button type="submit">Login</Button>
